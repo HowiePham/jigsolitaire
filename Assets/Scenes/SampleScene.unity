@@ -589,7 +589,7 @@ GameObject:
   - component: {fileID: 1130454360}
   - component: {fileID: 1130454361}
   m_Layer: 0
-  m_Name: ImageSplitter
+  m_Name: ImageMatrix
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -622,7 +622,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5dfdfc7e83f98541abaee994a258de4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardPrefab: {fileID: 500552586095621840, guid: 57cb34097542d74499507115080e5c57, type: 3}
   sourceTexture: {fileID: 2800000, guid: 3a9f051cf88bd1d47a2d2ff9f38d7a1f, type: 3}
   pixelsPerUnit: 100
   row: 3
