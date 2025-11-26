@@ -1,8 +1,8 @@
-using Lean.Common;
 using UnityEngine;
 
 public class ImageMatrixSplitter : MonoBehaviour
 {
+    [SerializeField] private Card cardPrefab;
     [SerializeField] private Texture2D sourceTexture;
     [SerializeField] private float pixelsPerUnit = 100f;
     [SerializeField] private int row;
@@ -69,18 +69,16 @@ public class ImageMatrixSplitter : MonoBehaviour
 
     private GameObject GetImageObject(int row, int col, Sprite sprite)
     {
-        var imageGO = new GameObject($"[{row},{col}]");
+        Card card = Instantiate(this.cardPrefab);
+        GameObject cardGameObject = card.gameObject;
+        cardGameObject.name = $"[{row},{col}]";
+
         float posY = (row - 1) * (this.imageHeight / this.pixelsPerUnit);
         float posX = (col - 1) * (this.imageWidth / this.pixelsPerUnit);
-        imageGO.transform.localPosition = new Vector3(posX, posY, 0);
 
-        var spriteRenderer = imageGO.AddComponent<SpriteRenderer>();
-        spriteRenderer.sprite = sprite;
-
-        imageGO.AddComponent<LeanSelectable>();
-        imageGO.AddComponent<BoxCollider2D>();
-
-        return imageGO;
+        card.transform.localPosition = new Vector3(posX, posY, 0);
+        card.SetSpriteCardVisual(sprite);
+        return cardGameObject;
     }
 
     private Sprite GetSpriteAtMatrixPos(int row, int col)
