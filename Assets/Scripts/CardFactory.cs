@@ -26,7 +26,7 @@ public class CardFactory
         this.imageHeight = this.sourceTexture.height / this.row;
     }
 
-    private GameObject GetCardObject(int row, int col, Sprite sprite)
+    private GameObject CreateCardObject(int row, int col, Sprite sprite)
     {
         var cardPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(CardPrefabAddress);
         var cardGameObject = (GameObject)PrefabUtility.InstantiatePrefab(cardPrefab);
@@ -38,6 +38,7 @@ public class CardFactory
 
         card.transform.localPosition = new Vector3(posX, posY, 0);
         card.SetSpriteCardVisual(sprite);
+        card.InitCard(new MatrixPos(row, col));
         return cardGameObject;
     }
 
@@ -68,9 +69,10 @@ public class CardFactory
             for (int col = 0; col < this.col; col++)
             {
                 Sprite sprite = GetSpriteAtMatrixPos(row, col);
-                GameObject newCardGO = GetCardObject(row, col, sprite);
+                GameObject newCardGO = CreateCardObject(row, col, sprite);
                 this.capturedImageMatrix[row, col] = true;
-                cards[row, col] = newCardGO.GetComponent<Card>();
+                var card = newCardGO.GetComponent<Card>();
+                cards[row, col] = card;
             }
         }
 
@@ -97,9 +99,10 @@ public class CardFactory
                 }
 
                 Sprite sprite = GetSpriteAtMatrixPos(imageRow, imageCol);
-                GameObject newCardGO = GetCardObject(row, col, sprite);
                 this.capturedImageMatrix[imageRow, imageCol] = true;
-                cards[row, col] = newCardGO.GetComponent<Card>();
+                GameObject newCardGO = CreateCardObject(row, col, sprite);
+                var card = newCardGO.GetComponent<Card>();
+                cards[row, col] = card;
             }
         }
 

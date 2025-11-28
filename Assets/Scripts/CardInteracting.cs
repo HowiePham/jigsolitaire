@@ -3,10 +3,20 @@ using UnityEngine;
 
 public class CardInteracting : MonoBehaviour
 {
-    [SerializeField] private Card card;
+    [SerializeField] private float swapingThreshold;
     [SerializeField] private bool isSelected;
+    private Bounds cardBounds;
     private Vector3 fingerOffset;
+    private Card[,] cards;
+    private Vector3[,] cardPositions;
     public bool IsSelected => this.isSelected;
+
+    public void InitCardInteracting(Card[,] cards, Vector3[,] cardPositions, Bounds bounds)
+    {
+        this.cards = cards;
+        this.cardPositions = cardPositions;
+        this.cardBounds = bounds;
+    }
 
     private void OnEnable()
     {
@@ -23,7 +33,7 @@ public class CardInteracting : MonoBehaviour
         }
 
         Vector3 fingerPos = finger.GetWorldPosition(10);
-        this.card.transform.position = this.fingerOffset + fingerPos;
+        this.transform.position = this.fingerOffset + fingerPos;
     }
 
     private void FingerDownHandler(LeanFinger finger)
@@ -36,7 +46,7 @@ public class CardInteracting : MonoBehaviour
         this.isSelected = true;
 
         Vector3 fingerPos = finger.GetWorldPosition(10);
-        this.fingerOffset = this.card.transform.position - fingerPos;
+        this.fingerOffset = this.transform.position - fingerPos;
     }
 
     private void FingerUpHandler(LeanFinger finger)
@@ -44,11 +54,34 @@ public class CardInteracting : MonoBehaviour
         this.isSelected = false;
     }
 
+    private void CheckSwappingPosition()
+    {
+        for (var row = 0; row < this.cardPositions.GetLength(0); row++)
+        {
+            for (var col = 0; col < this.cardPositions.GetLength(1); col++)
+            {
+                Vector3 cardPosition = this.cardPositions[row, col];
+                float distance = Vector2.Distance(this.transform.position, cardPosition);
+
+                if (distance <= this.swapingThreshold)
+                {
+                    SwapPosition(row, col);
+                    return;
+                }
+            }
+        }
+    }
+
+    public void SwapPosition(int row, int col)
+    {
+        Card card = this.cards[row, col];
+    }
+
     private bool CanSelectCard(LeanFinger finger)
     {
         Vector3 fingerPos = finger.GetWorldPosition(10);
 
-        return this.card.GetBounds().Contains(fingerPos);
+        return this.cardBounds.Contains(fingerPos);
     }
 
     private void OnDisable()
@@ -62,7 +95,7 @@ public class CardInteracting : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(this.card.transform.position, this.card.GetBounds().size);
+        Gizmos.DrawWireCube(this.transform.position, this.cardBounds.size);
     }
 #endif
 }
