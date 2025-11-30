@@ -5,6 +5,8 @@ public class Card : MonoBehaviour
     [SerializeField] private CardVisual cardVisual;
     [SerializeField] private CardInformation cardInformation;
 
+    public int CardTypeNumber => this.cardInformation.CardType;
+
     public void InitCard(CardInformation cardInformation, Sprite cardSprite)
     {
         this.cardInformation = cardInformation;
